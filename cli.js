@@ -3,6 +3,7 @@
 const path = require("path");
 const { compile, analyzeInput, buildCompileReport, PROFILE_DEFINITIONS, DEFAULT_PROFILE } = require("./lib");
 const { startServer } = require("./lib/service/http-server");
+const { buildDirectoryTarget, buildFromConfig } = require("./lib/pipeline/batch");
 
 function parseArgs(argv) {
   const args = [...argv];
@@ -14,6 +15,10 @@ function parseArgs(argv) {
     const current = args.shift();
     if (current === "-o" || current === "--output") {
       options.outputFile = args.shift();
+      continue;
+    }
+    if (current === "--out-dir") {
+      options.outputDir = args.shift();
       continue;
     }
     if (current === "-p" || current === "--profile") {
@@ -39,7 +44,10 @@ function printHelp() {
 
 Commands:
   build <input> [-o output.js] [--profile ${DEFAULT_PROFILE}] [--seed value]
+  build-dir <inputDir> [--out-dir dir] [--profile ${DEFAULT_PROFILE}] [--seed value]
+  build-config <configFile>
   analyze <input> [--profile ${DEFAULT_PROFILE}]
+  profiles
   serve [--port 3000]
 
 Profiles:
@@ -52,9 +60,31 @@ function runBuild(inputFile, options) {
   console.log(JSON.stringify(buildCompileReport(result), null, 2));
 }
 
+function runBuildDir(inputDir, options) {
+  const result = buildDirectoryTarget({
+    inputDir: path.resolve(inputDir),
+    outputDir: path.resolve(options.outputDir || './outsrc/batch'),
+    profile: options.profile,
+    seed: options.seed,
+  });
+  console.log(JSON.stringify(result, null, 2));
+}
+
+function runBuildConfig(configFile) {
+  const result = buildFromConfig(path.resolve(configFile));
+  console.log(JSON.stringify(result, null, 2));
+}
+
 function runAnalyze(inputFile, options) {
   const result = analyzeInput(path.resolve(inputFile), options);
   console.log(JSON.stringify(result, null, 2));
+}
+
+function runProfiles() {
+  console.log(JSON.stringify({
+    defaultProfile: DEFAULT_PROFILE,
+    profiles: PROFILE_DEFINITIONS,
+  }, null, 2));
 }
 
 function main() {
@@ -70,16 +100,39 @@ function main() {
     return;
   }
 
-  if ((command === "build" || command === "analyze") && positionals.length === 0) {
-    throw new Error(`${command} 需要输入文件路径`);
+  if (command === "profiles") {
+    runProfiles();
+    return;
   }
 
   if (command === "build") {
+    if (positionals.length === 0) {
+      throw new Error("build 需要输入文件路径");
+    }
     runBuild(positionals[0], options);
     return;
   }
 
+  if (command === "build-dir") {
+    if (positionals.length === 0) {
+      throw new Error("build-dir 需要输入目录路径");
+    }
+    runBuildDir(positionals[0], options);
+    return;
+  }
+
+  if (command === "build-config") {
+    if (positionals.length === 0) {
+      throw new Error("build-config 需要配置文件路径");
+    }
+    runBuildConfig(positionals[0]);
+    return;
+  }
+
   if (command === "analyze") {
+    if (positionals.length === 0) {
+      throw new Error("analyze 需要输入文件路径");
+    }
     runAnalyze(positionals[0], options);
     return;
   }

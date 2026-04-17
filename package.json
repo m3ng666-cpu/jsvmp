@@ -10,7 +10,10 @@
     "build:fast": "node cli.js build ./src/test.js -o ./outsrc/v2-fast.js --profile fast",
     "build:hardened": "node cli.js build ./src/test.js -o ./outsrc/v2-hardened.js --profile hardened",
     "analyze": "node cli.js analyze ./src/test.js",
-    "serve": "node start.js"
+    "serve": "node start.js",
+    "profiles": "node cli.js profiles",
+    "build:dir": "node cli.js build-dir ./src --out-dir ./outsrc/batch --profile fast --seed batch-seed",
+    "build:config": "node cli.js build-config ./jsvmp.config.json"
   },
   "keywords": [
     "jsvmp",

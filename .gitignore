@@ -6,3 +6,6 @@ outsrc/*.js
 outsrc/*.map
 dist/*.js
 dist/*.map
+outsrc/manifests/*.json
+outsrc/batch/**/*.js
+outsrc/config-batch/**/*.js

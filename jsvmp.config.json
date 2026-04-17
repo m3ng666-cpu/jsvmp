@@ -1,0 +1,25 @@
+{
+  "manifestFile": "./outsrc/manifests/config-build.json",
+  "targets": [
+    {
+      "input": "./src/test.js",
+      "output": "./outsrc/config-test-fast.js",
+      "profile": "fast",
+      "seed": "config-fast"
+    },
+    {
+      "input": "./src/t3.js",
+      "output": "./outsrc/config-t3-threaded.js",
+      "profile": "threaded",
+      "seed": "config-threaded"
+    }
+  ],
+  "directoryTargets": [
+    {
+      "inputDir": "./src",
+      "outputDir": "./outsrc/config-batch",
+      "profile": "fast",
+      "seed": "config-batch"
+    }
+  ]
+}

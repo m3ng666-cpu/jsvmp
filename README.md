@@ -19,11 +19,15 @@
 ├── lib/
 │   ├── index.js              # 统一编译入口
 │   ├── core/
+│   │   ├── files.js          # 目录扫描与输出路径工具
 │   │   ├── normalize.js      # 语法解析、兼容性预检
 │   │   ├── profiles.js       # profile 定义
-│   │   └── random.js         # seed 随机数和随机补丁
+│   │   ├── random.js         # seed 随机数和随机补丁
+│   │   └── report.js         # 编译报告与指标
 │   ├── engines/
 │   │   └── legacy.js         # 旧引擎适配层
+│   ├── pipeline/
+│   │   └── batch.js          # 目录构建与配置驱动构建
 │   └── service/
 │       └── http-server.js    # HTTP 服务
 ├── src/                      # 输入源码示例
@@ -68,7 +72,25 @@ node cli.js build ./src/test.js -o ./outsrc/v2-fast.js --profile fast --seed dem
 node cli.js analyze ./src/test.js
 ```
 
-### 3. 启动服务
+### 3. 批量编译整个目录
+
+```bash
+node cli.js build-dir ./src --out-dir ./outsrc/batch --profile fast --seed batch-seed
+```
+
+### 4. 按配置文件批量构建
+
+```bash
+node cli.js build-config ./jsvmp.config.json
+```
+
+### 5. 查看 profile 列表
+
+```bash
+node cli.js profiles
+```
+
+### 6. 启动服务
 
 ```bash
 node start.js
@@ -81,6 +103,10 @@ node start.js
 ### 健康检查
 
 - `GET /health`
+
+### profile 列表
+
+- `GET /profiles`
 
 ### 兼容旧接口，上传字符串
 
@@ -129,6 +155,10 @@ node start.js
 - `main_pro.js`
 
 但它们已经被改成可以被模块化调用，不再在 `require` 时直接执行样例任务。这样后续可以分阶段把 opcode 编译器、IR、runtime emitter 逐步迁到 `lib/` 内。
+
+## 配置驱动构建
+
+仓库根目录新增了 `jsvmp.config.json`，用于描述单文件目标和目录目标。每次执行 `build-config` 后，都会在 `outsrc/manifests/` 下写出一份构建清单，方便你后面每个版本直接归档、核对和推 GitHub。
 
 ## 后续演进方向
 
