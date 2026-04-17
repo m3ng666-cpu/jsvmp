@@ -13,7 +13,11 @@
     "serve": "node start.js",
     "profiles": "node cli.js profiles",
     "build:dir": "node cli.js build-dir ./src --out-dir ./outsrc/batch --profile fast --seed batch-seed",
-    "build:config": "node cli.js build-config ./jsvmp.config.json"
+    "build:config": "node cli.js build-config ./jsvmp.config.json",
+    "serve:prod": "PORT=8080 node start.js",
+    "pm2:start": "pm2 start ecosystem.config.js",
+    "pm2:restart": "pm2 restart ecosystem.config.js --update-env",
+    "smoke:api": "node scripts/api-smoke.js"
   },
   "keywords": [
     "jsvmp",

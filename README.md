@@ -98,7 +98,9 @@ node start.js
 
 ## HTTP API
 
-默认监听 `3000` 端口。
+默认监听 `8080` 端口。
+
+兼容旧 Java 版接口：`POST /js/jsString`、`POST /js/jsfile`、`POST /js/number`、`POST /js/test`，返回 `Message { code, message, state }` 结构。
 
 ### 健康检查
 
@@ -108,20 +110,35 @@ node start.js
 
 - `GET /profiles`
 
-### 兼容旧接口，上传字符串
+### 旧 Java API 兼容接口
+
+以下接口用于兼容旧 Java 版调用方式：
+
+- `POST /js/jsString`
+  - `application/x-www-form-urlencoded`
+  - 参数：`textString`（兼容接收 `jsString`）、`profile`、`seed`
+  - 返回：`Message { code, message, state }`，其中 `message` 为编译后的 JS 文本，前缀会补 `var jsvmp = 'jsvmp.com';`
+
+- `POST /js/jsfile`
+  - `multipart/form-data`
+  - 文件字段：任意第一个文件字段即可
+  - 可选字段：`profile`、`seed`
+  - 返回：`Message { code, message, state }`
+
+- `POST /js/number`
+  - 返回当前服务启动后的编译计数，格式同 `Message { code, message, state }`
+
+- `POST /js/test`
+  - 保留旧探活返回结构
+
+### v2 服务接口
 
 - `POST /stringUpload`
-- `application/x-www-form-urlencoded`
-- 参数：`jsString`、`profile`、`seed`
+  - `application/x-www-form-urlencoded`
+  - 参数：`jsString`、`profile`、`seed`
+  - 返回：JSON 编译报告
 
-### 兼容旧接口，上传文件
-
-- `POST /fileUpload`
-- `multipart/form-data`
-- 文件字段：第一个文件字段即可
-- 可选字段：`profile`、`seed`
-
-### 新接口，编译 JSON
+- `POST /compile`
 
 - `POST /compile`
 - `application/json`
@@ -159,6 +176,19 @@ node start.js
 ## 配置驱动构建
 
 仓库根目录新增了 `jsvmp.config.json`，用于描述单文件目标和目录目标。每次执行 `build-config` 后，都会在 `outsrc/manifests/` 下写出一份构建清单，方便你后面每个版本直接归档、核对和推 GitHub。
+
+## 部署
+
+生产默认使用 `8080` 端口，并提供 `pm2` 配置文件 `ecosystem.config.js`。当前线上切换方式为：停掉旧 `jsvmp.jar`，保持原端口 `8080` 不变，由 Node 版 `start.js` 接管，并继续兼容旧 `/js/*` API。
+
+```bash
+npm run serve:prod
+# 或
+npx pm2 start ecosystem.config.js --update-env
+npx pm2 save
+```
+
+如果系统没有全局安装 `pm2`，直接使用 `npx pm2` 即可。
 
 ## 后续演进方向
 
