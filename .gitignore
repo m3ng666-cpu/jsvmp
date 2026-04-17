@@ -1,0 +1,8 @@
+node_modules/
+nohup.out
+*.log
+.DS_Store
+outsrc/*.js
+outsrc/*.map
+dist/*.js
+dist/*.map
