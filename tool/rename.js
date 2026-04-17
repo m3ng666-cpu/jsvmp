@@ -80,8 +80,6 @@ function renameCj(ast){
     }
 
     traverse(ast, parseInfo)
-    var f = generator(ast).code;
-    fs.writeFileSync("./outsrc/out2.js", f, (e)=>{})
     return ast
 }
 

@@ -17,9 +17,12 @@ for (let i = 0; i< datkey.length; i++){
 
 var fornum = 0
 
-function cbbjsvmp(soure, outpath){
+function cbbjsvmp(soure, outpath, options){
+    options = options || {}
     var dataText
-    if (offes5 === 1){
+    if (typeof options.sourceCode === "string"){
+        dataText = options.sourceCode + '';
+    }else if (offes5 === 1){
         dataText = fs.readFileSync("./dist/"+soure) + '';
 
     }else {
@@ -726,17 +729,22 @@ function cbbjsvmp(soure, outpath){
     cood = ``
 
     datatext = "var constantPool = "+ JSON.stringify(constantPool)+"; var changlc = "+ JSON.stringify(changlc)+";\n"+dataText2;
-
-    fs.writeFileSync(outpath, cood + datatext, (e)=>{})
+    var outputCode = cood + datatext
+    if (outpath){
+        fs.writeFileSync(outpath, outputCode, (e)=>{})
+    }
+    return outputCode
 
 }
 
 
-// 需要加密的js
-const soure = "1.js"
-const outpath = "./outsrc/1.js"
+if (require.main === module){
+    const soure = "1.js"
+    const outpath = "./outsrc/1.js"
 
-cbbjsvmp(soure,outpath)
+    cbbjsvmp(soure,outpath)
+}
+exports.cbbjsvmp = cbbjsvmp;
 
 
 // 转es6的插件有问题 readme有方法可转

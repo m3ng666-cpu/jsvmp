@@ -1,4 +1,25 @@
 {
+  "name": "jsvmp",
+  "version": "2.0.0",
+  "description": "Refactored JSVMP toolkit with profiles, CLI, seeded randomization, and service layer.",
+  "main": "lib/index.js",
+  "bin": {
+    "jsvmp": "./cli.js"
+  },
+  "scripts": {
+    "build:fast": "node cli.js build ./src/test.js -o ./outsrc/v2-fast.js --profile fast",
+    "build:hardened": "node cli.js build ./src/test.js -o ./outsrc/v2-hardened.js --profile hardened",
+    "analyze": "node cli.js analyze ./src/test.js",
+    "serve": "node start.js"
+  },
+  "keywords": [
+    "jsvmp",
+    "javascript",
+    "vm",
+    "obfuscation",
+    "babel"
+  ],
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.26.0"
   },
@@ -6,9 +27,13 @@
     "@babel/generator": "^7.20.5",
     "@babel/parser": "^7.20.7",
     "@babel/traverse": "^7.20.5",
+    "@babel/types": "^7.26.0",
     "busboy": "^1.6.0",
     "filereader": "^0.10.3",
     "formidable": "^3.4.0",
     "multiparty": "^4.2.3"
+  },
+  "engines": {
+    "node": ">=16"
   }
 }

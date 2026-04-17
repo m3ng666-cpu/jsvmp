@@ -95,9 +95,12 @@ function getchhduei(){
     return duei;
 }
 
-function cbbjsvmp(soure, outpath){
+function cbbjsvmp(soure, outpath, options){
+    options = options || {}
     var dataText
-    if (offes5 === 1){
+    if (typeof options.sourceCode === "string"){
+        dataText = options.sourceCode + '';
+    }else if (offes5 === 1){
         dataText = fs.readFileSync("./dist/"+soure) + '';
 
     }else {
@@ -823,11 +826,15 @@ function cbbjsvmp(soure, outpath){
     cood = ``
 
     datatext = "var constantPool = "+ JSON.stringify(constantPool)+"; var changlc = "+ JSON.stringify(changlc)+";\n"+dataText2;
-
-    fs.writeFileSync(outpath, cood + datatext, (e)=>{})
+    var outputCode = cood + datatext
+    if (outpath){
+        fs.writeFileSync(outpath, outputCode, (e)=>{})
+    }
+    return outputCode
 
 }
 
+if (require.main === module){
 const tst = + new Date()
 
 const soure = "test.js"
@@ -890,3 +897,5 @@ process.exec(`uglifyjs ./outsrc/out.js --output ./outsrc/out3.js`, (error, stdou
         console.log("压缩 ==> 失败", error);
     }
 })
+}
+exports.cbbjsvmp = cbbjsvmp;

@@ -29,9 +29,12 @@ function RandDataCheise(data){
 }
 
 
-function cbbjsvmp(soure,outpath){
+function cbbjsvmp(soure,outpath, options){
+    options = options || {}
     var dataText;
-    if (offes5 === 1){
+    if (typeof options.sourceCode === "string"){
+        dataText = options.sourceCode + '';
+    }else if (offes5 === 1){
         //dataText =fs.readFileSync("./dist/"+soure + '');
         dataText = soure;
     }else {
@@ -747,7 +750,9 @@ function cbbjsvmp(soure,outpath){
     }).code
 
     //return "2312";
-    //fs.writeFileSync(outpath, d, (e)=>{})
+    if (outpath){
+        fs.writeFileSync(outpath, d, (e)=>{})
+    }
     return d;
 }
 
