@@ -17,7 +17,8 @@
     "serve:prod": "PORT=8080 node start.js",
     "pm2:start": "pm2 start ecosystem.config.js",
     "pm2:restart": "pm2 restart ecosystem.config.js --update-env",
-    "smoke:api": "node scripts/api-smoke.js"
+    "smoke:api": "node scripts/api-smoke.js",
+    "check:fixtures": "node scripts/compare-fixtures.js"
   },
   "keywords": [
     "jsvmp",
