@@ -74,6 +74,15 @@ function cbbjsvmp(soure,outpath, options){
         }
     }
 
+    function serializeConstantPool(pool){
+        return JSON.stringify(pool.map(value => {
+            if (typeof value === "string"){
+                return Array.from(value, ch => ch.codePointAt(0));
+            }
+            return value;
+        }));
+    }
+
     function startgetType(node, variablePool, zhili){
         if (node == null){
             return;
@@ -743,7 +752,7 @@ function cbbjsvmp(soure,outpath, options){
     start(ast)
 
 
-    var datatext = "var constantPool = "+ JSON.stringify(constantPool)+"; var changlc = "+ JSON.stringify(changlc)+";\n"+dataText2;
+    var datatext = "var constantPoolRaw = "+ serializeConstantPool(constantPool)+";var constantPool=constantPoolRaw.map(function(v){return Array.isArray(v)?String.fromCodePoint.apply(String,v):v;}); var changlc = "+ JSON.stringify(changlc)+";\n"+dataText2;
     var d = parser.parse(datatext)
     d = generator(d,{
         compact:true

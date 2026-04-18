@@ -197,8 +197,3 @@ npx pm2 save
 - 补全现代语法 normalize
 - 增加回归测试、运行时对照测试、benchmark
 - 做 runtime profile 生成器，而不是继续维护多套脚本
-
-## 作者
-
-- 作者：陈不不
-- 重构整理：JSVMP v2 架构升级
